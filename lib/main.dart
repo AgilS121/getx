@@ -1,13 +1,12 @@
 import 'package:getx/res/routes/routes.dart';
-import 'package:getx/view/Home/home.dart';
-import 'package:getx/view/Register/register.dart';
-import 'package:getx/view_models/services/loginService.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx/res/routes/routes_name.dart';
+import 'package:getx/view/Home/homeView.dart';
 import 'package:getx/view/Login/login.dart';
-import 'package:getx/view/intro/intro.dart';
 import 'package:getx/res/colors/pallete.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SewaIn extends StatefulWidget {
   const SewaIn({Key? key}) : super(key: key);
@@ -20,6 +19,28 @@ class _SewaInState extends State<SewaIn> {
   @override
   void initState() {
     super.initState();
+    // Periksa apakah token tersimpan saat aplikasi dimulai
+    checkToken();
+  }
+
+  // Fungsi untuk memeriksa apakah token tersimpan
+  void checkToken() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String? token = sp.getString('token');
+    print('initoken $token');
+
+    if (token != null && token.isNotEmpty) {
+      // Jika token tersimpan, arahkan pengguna langsung ke halaman utama
+      // atau halaman yang sesuai dengan logika navigasi aplikasi Anda.
+      navigateToHome();
+    }
+  }
+
+  // Fungsi untuk mengarahkan pengguna ke halaman utama
+  void navigateToHome() {
+    // Misalnya, Anda dapat menggunakan Navigator untuk mengarahkan pengguna
+    // ke halaman utama aplikasi Anda. Sesuaikan dengan logika navigasi Anda.
+    Get.toNamed(RouteName.myHome);
   }
 
   @override
@@ -34,31 +55,11 @@ class _SewaInState extends State<SewaIn> {
       ),
       // initialRoute: '/intro',
       getPages: AppRoutes.appRoutes(),
-      home: FutureBuilder(
-        future: LoginService().getUser(),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                  strokeWidth: 3.0,
-                ),
-              );
-            case ConnectionState.none:
-              return Login();
-            default:
-              if (snapshot.hasData) {
-                return HomeView(user: snapshot.data!);
-              } else {
-                return Login();
-              }
-          }
-        },
-      ),
+      home: Login(), // Jika token tidak tersimpan, arahkan pengguna ke halaman login
     );
   }
 }
+
 
 Future<void> main(List<String> args) async {
   SystemChrome.setSystemUIOverlayStyle(

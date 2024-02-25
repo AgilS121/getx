@@ -1,11 +1,16 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:getx/models/login/loginResponse.dart';
 import 'package:getx/repository/login/loginRepository.dart';
+import 'package:getx/res/routes/routes_name.dart';
 import 'package:getx/utils/utils.dart';
+import 'package:getx/view_models/controllers/userPreference.dart';
 
 class LoginViewModel extends GetxController {
 
   final _api = LoginRepository();
+
+  UserPreference userPreference = UserPreference();
 
   final emailController = TextEditingController().obs;
   final passwordController = TextEditingController().obs;
@@ -16,6 +21,7 @@ class LoginViewModel extends GetxController {
   RxBool loading = false.obs;
 
   void loginApi() {
+
     loading.value = true;
     Map data = {
       'email' : emailController.value.text,
@@ -28,6 +34,18 @@ class LoginViewModel extends GetxController {
       } else if (value['error'] == 'user not found') {
         Utils.snackBar('Login', value['error'])
       } else {
+
+      userPreference.saveUser(LoginResponse.fromJson(value))
+      .then((value) {
+        // Penyimpanan pengguna berhasil, tampilkan Snackbar
+        Get.toNamed(RouteName.myHome);
+        Utils.snackBar('Login', 'Login Success $value');
+      })
+      .catchError((error) {
+        // Penyimpanan pengguna gagal, tampilkan pesan kesalahan jika diperlukan
+        print('Error saving user: $error');
+      }),
+
         Utils.snackBar('Login', 'Login Success')
       }
       

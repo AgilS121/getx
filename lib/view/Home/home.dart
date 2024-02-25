@@ -7,15 +7,14 @@ import 'package:getx/view_models/services/loginService.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatefulWidget {
-  final UserModel user;
-  HomeView({required this.user});
+
   @override
   _HomeViewState createState() => _HomeViewState();
 }
 
 class _HomeViewState extends State<HomeView> {
-  List<dynamic> _data = [];
-  late HomeService homeService;
+   late Future<String?> _getTokenFuture;
+
 
   @override
   void initState() {

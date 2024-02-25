@@ -10,4 +10,6 @@ class RouteName {
   static const detailScreen = "/detail";
 
   static const tambahScreen = "/tambah";
+
+  static const myHome = "/home2";
 }
