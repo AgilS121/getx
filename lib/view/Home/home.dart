@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:getx/models/userModel.dart';
-import 'package:getx/pages/Detail/detail.dart';
-import 'package:getx/pages/Tambah/tambah.dart';
-import 'package:getx/services/homeService.dart';
-import 'package:getx/services/loginService.dart';
+import 'package:getx/view/Detail/detail.dart';
+import 'package:getx/view/Tambah/tambah.dart';
+import 'package:getx/view_models/services/homeService.dart';
+import 'package:getx/view_models/services/loginService.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatefulWidget {

@@ -4,10 +4,25 @@ import 'package:getx/controllers/IntroController.dart';
 import 'package:getx/models/IntroModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx/pages/Login/login.dart';
+import 'package:getx/view/Login/login.dart';
+import 'package:getx/view_models/services/introService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Intro extends StatelessWidget {
+class Intro extends StatefulWidget {
+
+  @override
+  State<Intro> createState() => _IntroState();
+}
+
+class _IntroState extends State<Intro> {
+  IntroService introService = IntroService();
+
+  @override
+  void initState() {
+    super.initState();
+    introService.isLogin();
+  }
+
   final IntroController controller = Get.put(IntroController());
 
   // This is your list of intro screens

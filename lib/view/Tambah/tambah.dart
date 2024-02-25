@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:getx/services/uploadService.dart';
+import 'package:getx/view_models/services/uploadService.dart';
 import 'package:image_picker/image_picker.dart';
 
 class TambahPage extends StatefulWidget {

@@ -2,18 +2,19 @@
 
 import 'package:getx/controllers/LoginController.dart';
 import 'package:getx/models/userModel.dart';
-import 'package:getx/pages/Home/home.dart';
-import 'package:getx/services/loginService.dart';
-import 'package:getx/theme/pallete.dart';
+import 'package:getx/view/Home/home.dart';
+import 'package:getx/view_models/controllers/loginViewModel.dart';
+import 'package:getx/view_models/services/loginService.dart';
+import 'package:getx/res/colors/pallete.dart';
 import 'package:flutter/material.dart';
-import 'package:getx/pages/Register/register.dart';
+import 'package:getx/view/Register/register.dart';
 import 'package:get/get.dart';
 
 class Login extends StatelessWidget {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  ValidationController validationController = ValidationController();
+  final loginVM = Get.put(LoginViewModel());
+  final ValidationController validationController = Get.put(ValidationController());
   final LoginService loginservice = Get.put(LoginService());
+  final _formkey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -78,10 +79,14 @@ class Login extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  TextFieldWithIcon(
+                  Form(
+                    key: _formkey, 
+                    child: Column(
+                      children: [
+                      TextFieldWithIcon(
                     hintText: 'Email',
                     icon: Icons.email,
-                    controller: emailController,
+                    controller: loginVM.emailController.value,
                     validationController: validationController,
                   ),
                   const SizedBox(height: 20), // Spacer
@@ -90,14 +95,17 @@ class Login extends StatelessWidget {
                     hintText: 'Password',
                     icon: Icons.lock,
                     obscureText: true,
-                    controller: passwordController,
+                    controller: loginVM.passwordController.value,
                     validationController: validationController,
                   ),
 
                   const SizedBox(
                     height: 20,
                   ),
+                  ],
+                  )),
                   Row(
+                    
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
@@ -109,27 +117,32 @@ class Login extends StatelessWidget {
                             color: MyColors.secondary),
                       ),
                       InkWell(
+                        
                         onTap: () async {
-  if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-    UserModel? user = await loginservice.login(
-        emailController.text, passwordController.text);
+                          // if (loginVM.emailController.value.text.isNotEmpty && loginVM.passwordController.value.text.isNotEmpty) {
+                          //   UserModel? user = await loginservice.login(
+                          //       loginVM.emailController.value.text, loginVM.passwordController.value.text);
 
-    if (user != null) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => HomeView(user: user),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          duration: Duration(seconds: 3),
-          content: Text('Email or password incorrect'),
-        ),
-      );
-    }
-  }
-},
+                          //   if (user != null) {
+                          //     Navigator.of(context).pushReplacement(
+                          //       MaterialPageRoute(
+                          //         builder: (_) => HomeView(user: user),
+                          //       ),
+                          //     );
+                          //   } else {
+                          //     ScaffoldMessenger.of(context).showSnackBar(
+                          //       SnackBar(
+                          //         duration: Duration(seconds: 3),
+                          //         content: Text('Email or password incorrect'),
+                          //       ),
+                          //     );
+                          //   }
+                          // }
+
+                          if (_formkey.currentState!.validate()) {
+                            loginVM.loginApi();
+                          }
+                        },
                         child: Container(
                           padding: EdgeInsets.symmetric(
                               horizontal: 10, vertical: 10),

@@ -1,11 +1,12 @@
-import 'package:getx/pages/Home/home.dart';
-import 'package:getx/pages/Register/register.dart';
-import 'package:getx/services/loginService.dart';
+import 'package:getx/res/routes/routes.dart';
+import 'package:getx/view/Home/home.dart';
+import 'package:getx/view/Register/register.dart';
+import 'package:getx/view_models/services/loginService.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx/pages/Login/login.dart';
-import 'package:getx/pages/intro/intro.dart';
-import 'package:getx/theme/pallete.dart';
+import 'package:getx/view/Login/login.dart';
+import 'package:getx/view/intro/intro.dart';
+import 'package:getx/res/colors/pallete.dart';
 import 'package:flutter/services.dart';
 
 class SewaIn extends StatefulWidget {
@@ -32,11 +33,7 @@ class _SewaInState extends State<SewaIn> {
         scaffoldBackgroundColor: MyColors.bg,
       ),
       // initialRoute: '/intro',
-      getPages: [
-        GetPage(name: '/intro', page: () => Intro()),
-        GetPage(name: '/login', page: () => Login()),
-        GetPage(name: '/register', page: () => Register()),
-      ],
+      getPages: AppRoutes.appRoutes(),
       home: FutureBuilder(
         future: LoginService().getUser(),
         builder: (context, snapshot) {

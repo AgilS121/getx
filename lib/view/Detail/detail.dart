@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:getx/services/detailService.dart';
+import 'package:getx/view_models/services/detailService.dart';
 
 class DetailPage extends StatefulWidget {
   final String jwtToken;

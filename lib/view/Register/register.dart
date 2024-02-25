@@ -1,7 +1,7 @@
 // ignore_for_file: sort_child_properties_last
 import 'package:getx/controllers/RegisterController.dart';
-import 'package:getx/services/registerService.dart';
-import 'package:getx/theme/pallete.dart';
+import 'package:getx/view_models/services/registerService.dart';
+import 'package:getx/res/colors/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

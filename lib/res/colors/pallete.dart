@@ -6,6 +6,7 @@ class MyColors {
   static const Color bottombar = Color(0xFFFCFCFC);
   static const Color bghome = Color(0xFFF2F2F2);
   static const Color text = Color(0xFF676767);
+  static const Color black = Color(0x000);
 
   static const Color defaultColor = Color.fromARGB(253, 4, 148, 192);
   static const Color primary = Color(0xFF24B0C1);
