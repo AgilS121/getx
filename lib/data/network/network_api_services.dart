@@ -9,22 +9,20 @@ import 'package:http/http.dart' as http ;
 class NetworkApiServices extends BaseApiServices {
 
   @override
-  Future<dynamic> getApi(String url) async {
-
+  Future<dynamic> getApi(String url, {Map<String, String>? headers}) async {
     if (kDebugMode) {
       print(url);
     }
-
+    
     dynamic responseJson ;
     try {
-          final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 10));
-
-          responseJson = returnResponse(response);
+      final response = await http.get(Uri.parse(url), headers: headers).timeout(const Duration(seconds: 10));
+      responseJson = returnResponse(response);
     } on SocketException {
-      throw NoInternetException('');
-    } on BadRequestException {
-      throw BadRequestException('');
-    }
+      throw NoInternetException('No Internet connection');
+    } on http.ClientException {
+      throw BadRequestException('Bad request');
+    } 
 
     return responseJson;
   }

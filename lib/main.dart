@@ -40,7 +40,7 @@ class _SewaInState extends State<SewaIn> {
   void navigateToHome() {
     // Misalnya, Anda dapat menggunakan Navigator untuk mengarahkan pengguna
     // ke halaman utama aplikasi Anda. Sesuaikan dengan logika navigasi Anda.
-    Get.toNamed(RouteName.myHome);
+    Get.toNamed(RouteName.homeScreen);
   }
 
   @override

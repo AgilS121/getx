@@ -38,7 +38,7 @@ class LoginViewModel extends GetxController {
       userPreference.saveUser(LoginResponse.fromJson(value))
       .then((value) {
         // Penyimpanan pengguna berhasil, tampilkan Snackbar
-        Get.toNamed(RouteName.myHome);
+        Get.toNamed(RouteName.homeScreen);
         Utils.snackBar('Login', 'Login Success $value');
       })
       .catchError((error) {

@@ -16,11 +16,11 @@ class AppRoutes {
     transition: Transition.leftToRightWithFade),
     GetPage(name: RouteName.registerScreen, page: () => Register(), transitionDuration: Duration(milliseconds: 250),
     transition: Transition.leftToRightWithFade),
-    GetPage(name: RouteName.myHome, page: () => MyHome(), transitionDuration: Duration(milliseconds: 250),
+    GetPage(name: RouteName.homeScreen, page: () => HomeView(), transitionDuration: Duration(milliseconds: 250),
     transition: Transition.leftToRightWithFade),
     // GetPage(name: RouteName.detailScreen, page: () => DetailPage(), transitionDuration: Duration(milliseconds: 250),
     // transition: Transition.leftToRightWithFade),
-    // GetPage(name: RouteName.tambahScreen, page: () => TambahPage(), transitionDuration: Duration(milliseconds: 250),
-    // transition: Transition.leftToRightWithFade)
+    GetPage(name: RouteName.tambahScreen, page: () => TambahPage(), transitionDuration: Duration(milliseconds: 250),
+    transition: Transition.leftToRightWithFade)
   ];
 }

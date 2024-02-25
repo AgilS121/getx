@@ -1,10 +1,16 @@
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
+import 'package:getx/data/response/status.dart';
 import 'package:getx/models/userModel.dart';
+import 'package:getx/res/routes/routes_name.dart';
 import 'package:getx/view/Detail/detail.dart';
 import 'package:getx/view/Tambah/tambah.dart';
+import 'package:getx/view_models/controllers/homeViewModel.dart';
+import 'package:getx/view_models/controllers/userPreference.dart';
 import 'package:getx/view_models/services/homeService.dart';
 import 'package:getx/view_models/services/loginService.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeView extends StatefulWidget {
 
@@ -13,94 +19,120 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-   late Future<String?> _getTokenFuture;
-
+  late Future<String?> _getTokenFuture;
+  final homeController = Get.put(HomeController());
+  UserPreference userPreference = UserPreference();
+  late String? _token;
 
   @override
   void initState() {
     super.initState();
-    homeService = HomeService(Dio());
-    init();
+    _getTokenFuture = _getToken();
   }
 
-  Future<void> init() async {
-    try {
-      List<dynamic> data = await homeService.fetchData(widget.user.token);
-      setState(() {
-        _data = data;
-      });
-    } catch (error) {
-      print('Error: $error');
-    }
+  Future<String?> _getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
   }
 
-  Future<void> _refreshData() async {
-    try {
-      List<dynamic> data = await homeService.fetchData(widget.user.token);
-      setState(() {
-        _data = data;
-      });
-    } catch (error) {
-      print('Error: $error');
-    }
+   Future<void> _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+
+    // Redirect user to login page after successful logout
+    Get.offAllNamed('/login'); // or Get.offAllNamed('/'); to go to home page
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(253, 4, 148, 192),
-        elevation: 0,
-        title: Text('Story App'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () async {
-              final logoutValue = await LoginService().logout();
-              if (logoutValue == true) {
-                Navigator.of(context).pushReplacementNamed('/login');
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    duration: Duration(seconds: 3),
-                    content: Text(
-                      'error with your token, have to login again',
-                    ),
-                  ),
-                );
-                Navigator.of(context).pushReplacementNamed('/login');
-              }
-            },
-          ),
-        ],
-      ),
-      body: RefreshIndicator(
-        onRefresh: _refreshData,
-        child: ListView.builder(
-          itemCount: _data.length,
-          itemBuilder: (context, index) {
-            return CardWidget(
-              imageUrl: _data[index]['photoUrl'],
-              name: _data[index]['name'],
-              description: _data[index]['description'],
-              jwtToken: widget.user.token,
-              storyId: _data[index]['id'],
-            );
-          },
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TambahPage(jwtToken: widget.user.token),
+    return 
+      
+      // body: RefreshIndicator(
+      //   onRefresh: _refreshData,
+      //   child: ListView.builder(
+      //     itemCount: _data.length,
+      //     itemBuilder: (context, index) {
+      //       return CardWidget(
+      //         imageUrl: _data[index]['photoUrl'],
+      //         name: _data[index]['name'],
+      //         description: _data[index]['description'],
+      //         jwtToken: widget.user.token,
+      //         storyId: _data[index]['id'],
+      //       );
+      //     },
+      //   ),
+      // ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {},
+      //   child: Icon(Icons.add),
+      //   backgroundColor: Color.fromARGB(253, 4, 148, 192),
+      // ),
+      FutureBuilder<String?>(
+      future: _getTokenFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          _token = snapshot.data;
+          if (_token != null) {
+            homeController.getAllApi(_token!);
+          }
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Color.fromARGB(253, 4, 148, 192),
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              title: Text('Story App'),
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.logout),
+                  onPressed: _logout,
+                ),
+              ],
+            ),
+            body: RefreshIndicator(
+              onRefresh: () async {
+                  homeController.getAllApi(_token!);
+              },
+              child: Obx(() {
+                switch (homeController.rxRequestStatus.value) {
+                  case Status.LOADING:
+                    return Center(child: CircularProgressIndicator());
+                  case Status.ERROR:
+                    return Text("Ada error");
+                  case Status.COMPLETED:
+                    return ListView.builder(
+                      itemCount: homeController.getAll.value!.listStory!.length,
+                      itemBuilder: (context, index) {
+                        return CardWidget(
+                          imageUrl: homeController.getAll.value!.listStory![index].photoUrl.toString(),
+                          name: homeController.getAll.value!.listStory![index].name.toString(),
+                          description: homeController.getAll.value!.listStory![index].description.toString(),
+                          jwtToken: _token!,
+                          storyId: homeController.getAll.value!.listStory![index].id.toString(),
+                        );
+                      },
+                    );
+                  default:
+                    return SizedBox.shrink();
+                }
+              }),
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                 Get.toNamed(RouteName.tambahScreen);
+              },
+              child: Icon(Icons.add),
+              backgroundColor: Color.fromARGB(253, 4, 148, 192),
             ),
           );
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Color.fromARGB(253, 4, 148, 192),
-      ),
+        } else {
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+      },
+  
     );
   }
 }
