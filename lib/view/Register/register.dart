@@ -1,15 +1,12 @@
-// ignore_for_file: sort_child_properties_last
-import 'package:getx/controllers/RegisterController.dart';
-import 'package:getx/view_models/services/registerService.dart';
-import 'package:getx/res/colors/pallete.dart';
+// Register.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx/res/colors/pallete.dart';
+import 'package:getx/view_models/controllers/registerViewModel.dart';
 
 class Register extends StatelessWidget {
-  final RegisterController controller = Get.put(RegisterController());
+  final controller = Get.put(RegisterController());
 
- final RegisterService registerService = RegisterService();
- 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +20,7 @@ class Register extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Bagian Header
           Container(
             height: 150,
             decoration: const BoxDecoration(
@@ -33,8 +31,9 @@ class Register extends StatelessWidget {
               ),
             ),
           ),
+          // Gambar Avatar
           Transform.translate(
-            offset: Offset(0, -80), // Sesuaikan dengan kebutuhan
+            offset: Offset(0, -80),
             child: Center(
               child: Stack(
                 children: [
@@ -43,14 +42,12 @@ class Register extends StatelessWidget {
                     height: 150,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors
-                          .white, // Ganti warna latar belakang sesuai kebutuhan
+                      color: Colors.white,
                     ),
                   ),
                   Positioned.fill(
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                          75), // Setengah dari lebar gambar bundar
+                      borderRadius: BorderRadius.circular(75),
                       child: Image.asset(
                         "assets/images/default.png",
                         width: 150,
@@ -62,6 +59,7 @@ class Register extends StatelessWidget {
               ),
             ),
           ),
+          // Judul
           Center(
             child: Text(
               "JOIN WITH US !",
@@ -73,116 +71,107 @@ class Register extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 20), // Spacer
+          const SizedBox(height: 20),
+          // Form Registrasi
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
+                // TextField untuk Nama
                 TextFieldWithIcon(
                   hintText: 'Username',
                   icon: Icons.person,
                   controller: controller.name,
-                  validationController: controller.validationController,
                 ),
-                const SizedBox(height: 20), // Spacer
+                const SizedBox(height: 20),
+                // TextField untuk Email
                 TextFieldWithIcon(
                   hintText: 'Email',
                   icon: Icons.email,
                   controller: controller.email,
-                  validationController: controller.validationController,
                 ),
-                const SizedBox(height: 20), // Spacer
+                const SizedBox(height: 20),
+                // TextField untuk Password
                 TextFieldWithIcon(
                   hintText: 'Create Password',
                   icon: Icons.lock,
                   obscureText: true,
                   controller: controller.passwordController,
-                  validationController: controller.validationController,
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                // TextFieldWithIcon(
-                //   hintText: 'Repeat Password',
-                //   icon: Icons.lock,
-                //   obscureText: true,
-                //   controller: controller.confirm_password,
-                //   validationController: controller.validationController,
-                // ),
-                // const SizedBox(
-                //   height: 20,
-                // ),
+                const SizedBox(height: 20),
+                // Tombol Registrasi
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       "Sign up",
                       style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: MyColors.secondary),
+                        fontFamily: "Poppins",
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: MyColors.secondary,
+                      ),
                     ),
                     InkWell(
-                onTap: () {
-                  // Panggil fungsi register di sini
-                  register();
-                },
-                child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: MyColors.accent,
-                    borderRadius: BorderRadius.circular(45),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(
-                        width: 25,
-                      ),
-                      Container(
-                        width: 25,
-                        height: 25,
+                      onTap: () {
+                        // Panggil fungsi register
+                        controller.register();
+                      },
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         decoration: BoxDecoration(
-                          shape: BoxShape.circle,
                           color: MyColors.accent,
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 2.0,
-                          ),
+                          borderRadius: BorderRadius.circular(45),
                         ),
-                        child: Center(
-                          child: Icon(
-                            Icons.arrow_forward_rounded,
-                            color: Colors.black,
-                          ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(width: 25),
+                            Container(
+                              width: 25,
+                              height: 25,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: MyColors.accent,
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 2.0,
+                                ),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.arrow_forward_rounded,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      )
-                    ],
-                  ),
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
           const SizedBox(height: 100),
+          // Pindah ke Halaman Login jika sudah memiliki akun
           Center(
             child: Column(
               children: [
                 Text(
                   "Already have an account?",
                   style: TextStyle(
-                      fontFamily: "Poppins-Regular",
-                      fontWeight: FontWeight.normal,
-                      fontSize: 16,
-                      color: MyColors.secondary),
+                    fontFamily: "Poppins-Regular",
+                    fontWeight: FontWeight.normal,
+                    fontSize: 16,
+                    color: MyColors.secondary,
+                  ),
                 ),
                 GestureDetector(
                   onTap: () {
-                    // Tambahkan logika untuk aksi "Sign up" di sini
+                    // Pindah ke halaman login
                     Get.toNamed('/login');
                   },
                   child: Text(
@@ -194,36 +183,13 @@ class Register extends StatelessWidget {
                       color: MyColors.secondary,
                     ),
                   ),
-                )
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
-  }
-
-
-  void register() async {
-    try {
-      final response = await registerService.register(
-        name: controller.name.text,
-        email: controller.email.text,
-        password: controller.passwordController.text,
-      );
-
-      if (response['error'] == false) {
-        // Registrasi sukses
-        Get.toNamed('/login');
-      } else {
-        // Registrasi gagal
-        // Tambahkan logika atau tampilkan pesan error sesuai response dari server
-        print('Error: ${response['message']}');
-      }
-    } catch (error) {
-      // Tangani kesalahan yang mungkin terjadi
-      print('Error: $error');
-    }
   }
 }
 
@@ -232,14 +198,12 @@ class TextFieldWithIcon extends StatelessWidget {
   final IconData icon;
   final bool obscureText;
   final TextEditingController controller;
-  final ValidationRegisterController validationController;
 
   const TextFieldWithIcon({
     required this.hintText,
     required this.icon,
     this.obscureText = false,
     required this.controller,
-    required this.validationController,
   });
 
   @override
@@ -247,52 +211,21 @@ class TextFieldWithIcon extends StatelessWidget {
     return TextField(
       controller: controller,
       obscureText: obscureText,
-      style: TextStyle(color: Colors.white),
       onChanged: (value) {
-        // Validasi email
-        if (hintText.toLowerCase() == 'email') {
-          if (!GetUtils.isEmail(value)) {
-            validationController.setEmailError(true);
-          } else {
-            validationController.setEmailError(false);
-          }
-        }
-
-        // Validasi password
-        if (hintText.toLowerCase() == 'password') {
-          if (value.length < 8) {
-            validationController.setPasswordError(true);
-          } else {
-            validationController.setPasswordError(false);
-          }
-        }
-
-        if (hintText.toLowerCase() == 'confirm_password') {
-          validationController.setConfirmPasswordError(
-              validationController.passwordController.text, value);
-        }
+        // Validasi inputan jika diperlukan
       },
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle:
-            TextStyle(color: Colors.white.withOpacity(0.7)), // Warna hint
+        hintStyle: TextStyle(
+          color: Colors.white.withOpacity(0.7),
+        ),
         fillColor: MyColors.primary,
         filled: true,
-        prefixIcon: Icon(icon, color: Colors.white), // Warna ikon
+        prefixIcon: Icon(icon, color: Colors.white),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(40),
-          borderSide: BorderSide.none, // Hilangkan garis tepi
+          borderSide: BorderSide.none,
         ),
-        suffixIcon: validationController.hasError(hintText.toLowerCase())
-            ? Icon(Icons.error, color: Colors.red)
-            : null,
-        errorText: validationController.hasError(hintText.toLowerCase())
-            ? hintText.toLowerCase() == 'email'
-                ? validationController.emailErrorMessage.value
-                : hintText.toLowerCase() == 'password'
-                    ? validationController.passwordErrorMessage.value
-                    : validationController.confirmPasswordErrorMessage.value
-            : null,
       ),
     );
   }

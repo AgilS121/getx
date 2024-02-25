@@ -40,13 +40,3 @@ class ValidationRegisterController extends GetxController {
         confirmPasswordError.value ? 'Password tidak sesuai' : '';
   }
 }
-
-class RegisterController extends GetxController {
-  TextEditingController name = TextEditingController();
-  TextEditingController no_telp = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirm_password = TextEditingController();
-  ValidationRegisterController validationController =
-      ValidationRegisterController();
-}
