@@ -1,33 +1,26 @@
 import 'package:get/get.dart';
+import 'package:getx/models/Data/LoginResponseCRUD.dart';
 import 'package:getx/models/login/loginResponse.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserPreference extends GetxController {
-
-  Future<bool> saveUser(LoginResponse responseLogin) async {
-
+  Future<bool> saveUser(LoginResponseCRUD responseLogin) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    sp.setString('userId', responseLogin.loginResult!.userId.toString());
-    sp.setString('name', responseLogin.loginResult!.name.toString());
-    sp.setString('token', responseLogin.loginResult!.token.toString());
+    sp.setString('token', responseLogin.token.toString());
 
     return true;
   }
 
-  Future<LoginResponse> getUser() async {
-
+  Future<LoginResponseCRUD> getUser() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    String? userId = sp.getString('userId');
-    String? name = sp.getString('name');
     String? token = sp.getString('token');
     print("ini tokennya $token");
-    LoginResult loginResult = LoginResult(userId: userId ?? "", name: name ?? "", token: token ?? "");
-  
-    return LoginResponse(loginResult: loginResult);
+
+    return LoginResponseCRUD(token: token);
   }
 
   Future<bool> removeUser() async {
-    SharedPreferences sp =await SharedPreferences.getInstance();
+    SharedPreferences sp = await SharedPreferences.getInstance();
     sp.clear();
     return true;
   }

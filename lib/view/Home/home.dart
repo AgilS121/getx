@@ -5,6 +5,7 @@ import 'package:getx/models/userModel.dart';
 import 'package:getx/res/routes/routes_name.dart';
 import 'package:getx/view/Detail/detail.dart';
 import 'package:getx/view/Tambah/tambah.dart';
+import 'package:getx/view_models/controllers/deleteController.dart';
 import 'package:getx/view_models/controllers/homeViewModel.dart';
 import 'package:getx/view_models/controllers/userPreference.dart';
 import 'package:getx/view_models/services/homeService.dart';
@@ -13,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeView extends StatefulWidget {
-
   @override
   _HomeViewState createState() => _HomeViewState();
 }
@@ -35,7 +35,7 @@ class _HomeViewState extends State<HomeView> {
     return prefs.getString('token');
   }
 
-   Future<void> _logout() async {
+  Future<void> _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
 
@@ -45,29 +45,29 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return 
-      
-      // body: RefreshIndicator(
-      //   onRefresh: _refreshData,
-      //   child: ListView.builder(
-      //     itemCount: _data.length,
-      //     itemBuilder: (context, index) {
-      //       return CardWidget(
-      //         imageUrl: _data[index]['photoUrl'],
-      //         name: _data[index]['name'],
-      //         description: _data[index]['description'],
-      //         jwtToken: widget.user.token,
-      //         storyId: _data[index]['id'],
-      //       );
-      //     },
-      //   ),
-      // ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {},
-      //   child: Icon(Icons.add),
-      //   backgroundColor: Color.fromARGB(253, 4, 148, 192),
-      // ),
-      FutureBuilder<String?>(
+    return
+
+        // body: RefreshIndicator(
+        //   onRefresh: _refreshData,
+        //   child: ListView.builder(
+        //     itemCount: _data.length,
+        //     itemBuilder: (context, index) {
+        //       return CardWidget(
+        //         imageUrl: _data[index]['photoUrl'],
+        //         name: _data[index]['name'],
+        //         description: _data[index]['description'],
+        //         jwtToken: widget.user.token,
+        //         storyId: _data[index]['id'],
+        //       );
+        //     },
+        //   ),
+        // ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {},
+        //   child: Icon(Icons.add),
+        //   backgroundColor: Color.fromARGB(253, 4, 148, 192),
+        // ),
+        FutureBuilder<String?>(
       future: _getTokenFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
@@ -90,7 +90,7 @@ class _HomeViewState extends State<HomeView> {
             ),
             body: RefreshIndicator(
               onRefresh: () async {
-                  homeController.getAllApi(_token!);
+                homeController.getAllApi(_token!);
               },
               child: Obx(() {
                 switch (homeController.rxRequestStatus.value) {
@@ -100,14 +100,18 @@ class _HomeViewState extends State<HomeView> {
                     return Text("Ada error");
                   case Status.COMPLETED:
                     return ListView.builder(
-                      itemCount: homeController.getAll.value!.listStory!.length,
+                      itemCount: homeController
+                          .getAll.length, // Menggunakan panjang RxList
                       itemBuilder: (context, index) {
+                        final data = homeController.getAll[
+                            index]; // Mengambil data pada indeks tertentu
                         return CardWidget(
-                          imageUrl: homeController.getAll.value!.listStory![index].photoUrl.toString(),
-                          name: homeController.getAll.value!.listStory![index].name.toString(),
-                          description: homeController.getAll.value!.listStory![index].description.toString(),
-                          jwtToken: _token!,
-                          storyId: homeController.getAll.value!.listStory![index].id.toString(),
+                          imageUrl: '', // Mengakses properti dari data
+                          name: data.title.toString(),
+                          description: data.details.toString(),
+                          jwtToken:
+                              _token!, // Pastikan token sudah diinisialisasi
+                          storyId: data.id.toString(),
                         );
                       },
                     );
@@ -118,7 +122,7 @@ class _HomeViewState extends State<HomeView> {
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                 Get.toNamed(RouteName.tambahScreen);
+                Get.toNamed(RouteName.tambahScreen);
               },
               child: Icon(Icons.add),
               backgroundColor: Color.fromARGB(253, 4, 148, 192),
@@ -132,11 +136,9 @@ class _HomeViewState extends State<HomeView> {
           );
         }
       },
-  
     );
   }
 }
-
 
 class CardWidget extends StatelessWidget {
   final String imageUrl;
@@ -144,6 +146,7 @@ class CardWidget extends StatelessWidget {
   final String description;
   final String jwtToken;
   final String storyId;
+  final _deleteController = Get.put(DeleteController());
 
   CardWidget({
     required this.imageUrl,
@@ -157,15 +160,15 @@ class CardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailPage(
-              jwtToken: jwtToken,
-              storyId: storyId,
-            ),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => DetailPage(
+        //       jwtToken: jwtToken,
+        //       storyId: storyId,
+        //     ),
+        //   ),
+        // );
       },
       child: Card(
         elevation: 4,
@@ -173,19 +176,47 @@ class CardWidget extends StatelessWidget {
         child: Column(
           children: [
             Image.network(
-              imageUrl,
+              'https://via.placeholder.com/200',
               height: 200,
               width: double.infinity,
               fit: BoxFit.cover,
             ),
             Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                name,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      name,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  PopupMenuButton(
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        PopupMenuItem(
+                          child: Text('Update'),
+                          value: 'update',
+                        ),
+                        PopupMenuItem(
+                          child: Text('Delete'),
+                          value: 'delete',
+                        ),
+                      ];
+                    },
+                    onSelected: (String value) async {
+                      if (value == 'update') {
+                        Get.toNamed(RouteName.updateScreen, arguments: storyId);
+                      } else if (value == 'delete') {
+                        await _deleteController.deleteTask(jwtToken, storyId);
+                        print("ini edit story id $storyId");
+                      }
+                    },
+                  ),
+                ],
               ),
             ),
           ],

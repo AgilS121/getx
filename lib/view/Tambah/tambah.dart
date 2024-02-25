@@ -8,11 +8,10 @@
 // import 'package:shared_preferences/shared_preferences.dart';
 
 // class TambahPage extends StatefulWidget {
-  
+
 //   @override
 //   _TambahPageState createState() => _TambahPageState();
 // }
-
 
 // class _TambahPageState extends State<TambahPage> {
 //   final TextEditingController _deskripsiController = TextEditingController();
@@ -88,7 +87,6 @@
 //     },
 //   );
 // }
-
 
 //   Future<void> uploadData() async {
 //     try {
@@ -216,7 +214,8 @@ class TambahPage extends StatefulWidget {
 
 class _TambahPageState extends State<TambahPage> {
   final AddDataController _controller = Get.put(AddDataController());
-  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _title = TextEditingController();
+  final TextEditingController _details = TextEditingController();
   File? _image;
   late Future<String?> _getTokenFuture;
   late String? _token;
@@ -259,23 +258,29 @@ class _TambahPageState extends State<TambahPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextFormField(
-                    controller: _descriptionController,
-                    decoration: InputDecoration(labelText: 'Description'),
+                    controller: _title,
+                    decoration: InputDecoration(labelText: 'Title'),
                   ),
                   SizedBox(height: 16),
-                  _image != null
-                      ? Image.file(_image!)
-                      : ElevatedButton(
-                          onPressed: _selectImage,
-                          child: Text('Select Image'),
-                        ),
+                  // _image != null
+                  //     ? Image.file(_image!)
+                  //     : ElevatedButton(
+                  //         onPressed: _selectImage,
+                  //         child: Text('Select Image'),
+                  //       ),
+                  TextFormField(
+                    controller: _details,
+                    decoration: InputDecoration(labelText: 'Details'),
+                  ),
                   SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      if (_image != null && _descriptionController.text.isNotEmpty) {
-                        _controller.uploadStory(_token!, _descriptionController.text, _image!);
+                      if (_title.text.isNotEmpty && _details.text.isNotEmpty) {
+                        _controller.uploadStory(
+                            _token!, _title.text, _details.text);
                       } else {
-                        Get.snackbar('Error', 'Please select an image and provide description');
+                        Get.snackbar('Error',
+                            'Please select an image and provide description');
                       }
                     },
                     child: Text('Upload Story'),

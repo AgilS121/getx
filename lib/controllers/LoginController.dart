@@ -27,6 +27,6 @@ class ValidationController extends GetxController {
   void setPasswordError(bool value) {
     passwordError.value = value;
     passwordErrorMessage.value =
-        value ? 'Password harus minimal 8 karakter' : '';
+        value ? 'Password harus minimal 6 karakter' : '';
   }
 }

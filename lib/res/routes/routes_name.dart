@@ -1,9 +1,9 @@
 class RouteName {
-  static const intro = "/intro" ;
+  static const intro = "/intro";
 
   static const loginScreen = "/login";
 
-  static const registerScreen = "/register" ;
+  static const registerScreen = "/register";
 
   static const homeScreen = "/home";
 
@@ -12,4 +12,6 @@ class RouteName {
   static const tambahScreen = "/tambah";
 
   static const myHome = "/home2";
+
+  static const updateScreen = "/update";
 }
