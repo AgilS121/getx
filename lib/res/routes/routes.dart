@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:getx/res/routes/routes_name.dart';
+import 'package:getx/view/Detail/detail.dart';
 import 'package:getx/view/Home/home.dart';
 import 'package:getx/view/Login/login.dart';
 import 'package:getx/view/Register/register.dart';
@@ -29,8 +30,11 @@ class AppRoutes {
             page: () => HomeView(),
             transitionDuration: Duration(milliseconds: 250),
             transition: Transition.leftToRightWithFade),
-        // GetPage(name: RouteName.detailScreen, page: () => DetailPage(), transitionDuration: Duration(milliseconds: 250),
-        // transition: Transition.leftToRightWithFade),
+        GetPage(
+            name: RouteName.detailScreen,
+            page: () => DetailPage(),
+            transitionDuration: Duration(milliseconds: 250),
+            transition: Transition.leftToRightWithFade),
         GetPage(
             name: RouteName.tambahScreen,
             page: () => TambahPage(),

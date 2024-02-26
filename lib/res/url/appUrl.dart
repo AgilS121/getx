@@ -13,4 +13,5 @@ class AppUrl {
   static const String update = "$baseUrl/api/tasks";
   static const String delete = "$baseUrl/api/tasks";
   static const String logout = "$baseUrl/api/logout";
+  static const String detail = "$baseUrl/api/detail";
 }

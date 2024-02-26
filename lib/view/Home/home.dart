@@ -160,15 +160,7 @@ class CardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => DetailPage(
-        //       jwtToken: jwtToken,
-        //       storyId: storyId,
-        //     ),
-        //   ),
-        // );
+        Get.toNamed(RouteName.detailScreen, arguments: storyId);
       },
       child: Card(
         elevation: 4,

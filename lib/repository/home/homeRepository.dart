@@ -29,27 +29,23 @@ class HomeRepository {
   //     throw Exception('Failed to get data');
   //   }
   // }
-  static const String apiUrl =
-      'http://192.168.91.205/laravel-rest-api-jwt-auth/public/api/tasks';
 
   final Dio _dio = Dio();
   Future<List<ReadResponseCRUD>> getAll(String token) async {
     final headers = {
-      // 'Authorization': 'Bearer $token',
-
-      'Authorization': 'Bearer $token'
+      'Authorization': 'Bearer $token',
     };
 
     try {
-      final http.Response response = await http.get(
-        Uri.parse(apiUrl),
-        headers: headers,
+      final Response response = await _dio.get(
+        AppUrl.read,
+        options: Options(headers: headers),
       );
 
-      print("response data ${response.body}");
+      print("response data ${response.data}");
 
       if (response.statusCode == 200) {
-        final List<dynamic> responseData = jsonDecode(response.body);
+        final List<dynamic> responseData = response.data;
         return responseData
             .map((json) => ReadResponseCRUD.fromJson(json))
             .toList();
